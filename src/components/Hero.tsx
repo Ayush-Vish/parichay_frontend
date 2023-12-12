@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import image from "../assets/unnamed.webp"
 import { Button } from "./ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getUserData } from "@/Redux/Slices/Auth.slice";
 
 function Hero ( ) { 
@@ -29,13 +29,18 @@ function Hero ( ) {
         e.preventDefault() ;
         window.open("http://localhost:4000/api/v1/user/auth/google" , "_self")
     }
-
+    
     async function getData ( )  {
+        console.log("getting data");
+
         const response= await dispatch(getUserData()); 
-
-
-
+        console.log(response) ;
     }
+
+    useEffect(() => { 
+        getData()
+    } ,[]) ;
+
 
     return ( 
         <section className="flex flex-col sm:flex-row   max-w-[60rem] mt-44 gap-7"  > 

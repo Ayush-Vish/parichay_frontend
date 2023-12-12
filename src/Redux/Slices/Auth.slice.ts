@@ -2,8 +2,37 @@ import axiosInstance from "@/Helpers/axios/axios.helper";
 import { toast } from "@/components/ui/use-toast";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
 
+type authInitailState= {
+    isLoggedIn :boolean, 
+    data : {
+        _id: object,
+        name: string,
+        email: string,
+        sub: number,
+        picture: string,
+        googleId: number,
+        __v: number,
+    }
+}
 
-const initailState= {} as unknown ;
+let data = {};
+if (typeof localStorage !== 'undefined') {
+  const userData = localStorage.getItem("userdata");
+  if (userData) {
+    try {
+      data = JSON.parse(userData);
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
+    }
+  }
+}
+
+
+
+const initailState= {
+    isLoggedIn :localStorage.getItem("isLoggedIn") ||false, 
+    data : data,
+} as authInitailState ;
 
 
 export const getUserData= createAsyncThunk("/auth/user/getData" , async () =>{
@@ -15,10 +44,7 @@ export const getUserData= createAsyncThunk("/auth/user/getData" , async () =>{
         })
         return (await response)?.data;
     } catch (error : any) {
-       toast({
-            title : "Error",
-            description : error.message,
-       })
+        console.log(error.response.data.message);
     }
 })
 
@@ -30,12 +56,21 @@ const authSlice = createSlice({
     reducers:{}, 
     extraReducers  :(builder) => {
         builder
-            .addCase(getUserData.fulfilled , (state ,action ) => {
+            .addCase(getUserData.fulfilled , (state   ,action ) => {
                 console.log(action.payload);
-
-                state = action.payload;
+                localStorage.setItem("userdata" , JSON.stringify(action.payload));
+                localStorage.setItem("isLoggedIn" , "true");
+                state.data = action.payload;
+                state.isLoggedIn = true;
             })
-        
+            .addCase(getUserData.rejected , (state  : authInitailState,action ) => {
+                console.log(action.payload);
+                localStorage.removeItem("userdata");
+                localStorage.removeItem("isLoggedIn");
+                state.data = {};
+                state.isLoggedIn = false;
+            })
+         
         
     }
 })
