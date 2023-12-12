@@ -1,12 +1,14 @@
-import axiosInstance from "@/Helpers/axios/axios.helper";
+import { useDispatch } from "react-redux";
 import image from "../assets/unnamed.webp"
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { getUserData } from "@/Redux/Slices/Auth.slice";
 
 function Hero ( ) { 
 
     const [ showCode , setShowCode ] = useState(0);  
     const [code , setCode] = useState("");
+    const dispatch = useDispatch();
 
     function handleUserInput (e)   {
 
@@ -23,12 +25,13 @@ function Hero ( ) {
 
 
     }
-    async function handleLogin () {
-       
-       
-        window.location.href  = "http://localhost:4000/api/v1/user/auth/google";
-        const response = await axiosInstance.get("/user/auth/google");
-        
+    async function handleLogin (e: any) {
+        e.preventDefault() ;
+        window.open("http://localhost:4000/api/v1/user/auth/google" , "_self")
+    }
+
+    async function getData ( )  {
+        const response= await dispatch(getUserData()); 
 
 
 

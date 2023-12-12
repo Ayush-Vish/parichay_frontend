@@ -3,10 +3,20 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import store from './Redux/store.ts'
+import { Toaster } from './components/ui/toaster.tsx'
+
+
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>
+    <Provider store={store} >
+
+        <BrowserRouter>
+                <App />
+                <Toaster/>
+        </BrowserRouter>
+    </Provider>
 
 )
