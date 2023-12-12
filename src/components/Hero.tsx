@@ -1,15 +1,18 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import image from "../assets/unnamed.webp"
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import { getUserData } from "@/Redux/Slices/Auth.slice";
+import {authInitailState } from "../types/authTypes"
 
 function Hero ( ) { 
-
+    
+    
     const [ showCode , setShowCode ] = useState(0);  
     const [code , setCode] = useState("");
     const dispatch = useDispatch();
-
+    const userData = useSelector(state   => state.auth ) as authInitailState;
+    console.log(userData)
     function handleUserInput (e)   {
 
         const {value} = e.target;
@@ -59,11 +62,18 @@ function Hero ( ) {
                         Stay connected and collaborate with family, friends and colleagues no matter where  you are. 
                     </p>
                 </div>
-                <div>
-                    <Button onClick={handleLogin}>
-                        Sign In 
-                    </Button>
-                </div>
+                {
+                    userData.data ? 
+                    <div>
+                        <h4 className="text-sm text-center flex flex-col sm:flex-row gap-1 "  >Welcome <span className="font-bold" > {userData.data.name}</span></h4>
+                    </div> 
+                    :
+                    <div>
+                        <Button onClick={handleLogin}>
+                            Sign In 
+                        </Button>
+                    </div>
+                }
                 <div className="flex  flex-col items-center sm:flex-row sm:gap-2 sm:text-sm ">
                     Join a meeting now   {!showCode ?  <span onClick={() =>setShowCode(1)} className="text-gray-800 underline font-bold ">Enter Code </span> : <div> <input className="active:outline-none focus:outline-none w-40" onChange={handleUserInput} type="text" name="code" value={code} placeholder="Enter code here" /> <button className="disabled:text-gray-500 disabled:font-light font-bold " disabled={!code}  onClick={handleSubmit}> Join</button> </div> }    
                 </div>

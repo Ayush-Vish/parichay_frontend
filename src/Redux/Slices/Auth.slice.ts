@@ -1,19 +1,8 @@
 import axiosInstance from "@/Helpers/axios/axios.helper";
 import { toast } from "@/components/ui/use-toast";
+import { authInitailState } from "@/types/authTypes";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
 
-type authInitailState= {
-    isLoggedIn :boolean, 
-    data : {
-        _id: object,
-        name: string,
-        email: string,
-        sub: number,
-        picture: string,
-        googleId: number,
-        __v: number,
-    }
-}
 
 let data = {};
 if (typeof localStorage !== 'undefined') {
@@ -60,7 +49,7 @@ const authSlice = createSlice({
                 console.log(action.payload);
                 localStorage.setItem("userdata" , JSON.stringify(action.payload));
                 localStorage.setItem("isLoggedIn" , "true");
-                state.data = action.payload;
+                state.data = action.payload?.data;
                 state.isLoggedIn = true;
             })
             .addCase(getUserData.rejected , (state  : authInitailState,action ) => {
