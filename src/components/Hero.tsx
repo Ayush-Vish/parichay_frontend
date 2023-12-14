@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import { getUserData } from "@/Redux/Slices/Auth.slice";
 import {authInitailState } from "../types/authTypes"
+import { useNavigate } from "react-router-dom";
 
 function Hero ( ) { 
     
@@ -11,40 +12,29 @@ function Hero ( ) {
     const [ showCode , setShowCode ] = useState(0);  
     const [code , setCode] = useState("");
     const dispatch = useDispatch();
-    const userData = useSelector(state   => state.auth ) as authInitailState;
-    console.log(userData)
+    const navigate= useNavigate() ;
+
+    const userData = useSelector(state   => state?.auth ) as authInitailState;
     function handleUserInput (e)   {
-
         const {value} = e.target;
-        
         setCode(value); 
-        console.log(value); 
     }
 
-    function handleSubmit (e : React.FormEvent<HTMLButtonElement> )  {
+    function handleSubmit (e : any )  {
         e.preventDefault();
-        console.log("submitted")
-        
-
-
     }
-    async function handleLogin (e: any) {
+    async function handleLogin (e : any) {
         e.preventDefault() ;
         window.open("http://localhost:4000/api/v1/user/auth/google" , "_self")
     }
     
     async function getData ( )  {
-        console.log("getting data");
-
         const response= await dispatch(getUserData()); 
-        console.log(response) ;
     }
 
     useEffect(() => { 
         getData()
     } ,[]) ;
-
-
     return ( 
         <section className="flex flex-col sm:flex-row   max-w-[60rem] mt-44 gap-7"  > 
             <div className="flex  flex-col  items-center gap-3 sm:items-start "> 
@@ -73,6 +63,16 @@ function Hero ( ) {
                             Sign In 
                         </Button>
                     </div>
+                }
+
+                {
+                    userData.data && (
+                        <div>
+                            <Button onClick={() =>  navigate("/meeting/create")}>
+                                Create a meeting
+                            </Button>
+                        </div>
+                    )
                 }
                 <div className="flex  flex-col items-center sm:flex-row sm:gap-2 sm:text-sm ">
                     Join a meeting now   {!showCode ?  <span onClick={() =>setShowCode(1)} className="text-gray-800 underline font-bold ">Enter Code </span> : <div> <input className="active:outline-none focus:outline-none w-40" onChange={handleUserInput} type="text" name="code" value={code} placeholder="Enter code here" /> <button className="disabled:text-gray-500 disabled:font-light font-bold " disabled={!code}  onClick={handleSubmit}> Join</button> </div> }    
