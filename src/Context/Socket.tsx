@@ -14,9 +14,7 @@ export const useSocket = () => {
 export function SocketProvider(  {children} :{children : React.ReactNode}  ) { 
 
     const socket = useMemo(
-        () => 
-         io("localhost:4001")
-    , [])
+        () => io("localhost:4001"), [])
 
 
     return (

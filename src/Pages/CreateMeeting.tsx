@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import {authInitailState } from "../types/authTypes"
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { VideoIcon } from "lucide-react";
 import { getCurrentDate } from "@/Helpers/getDate.helper";
 import { useSocket } from "@/Context/Socket";
@@ -12,7 +12,6 @@ function CreateMeetingPage ( )  {
     const navigate = useNavigate();
 
     const authData = useSelector(state => state.auth  )as authInitailState;
-    console.log(authData.data.email);
 
     const randomId =  "fdf"
 
@@ -22,14 +21,24 @@ function CreateMeetingPage ( )  {
     
     const data = useSelector(state   => state.auth) as authInitailState ;
     function handleSubmit ( )  {
+
+
+
+
         socket.emit("join-room" , {roomId: randomId , emailId : authData.data.email })
     }
-    function handleRoomJoined ({roomId}) {
-        navigate(`/meeting/${roomId}`);
-
-    } 
+    const  handleRoomJoined = useCallback(
+        ({roomId}) => {
+            console.log("Room Joined" , roomId) ;
+            navigate(`/meeting/${roomId}`) ;
+        },
+        [navigate]
+    )
     useEffect(()=>{
         socket.on("joined-room" ,handleRoomJoined )
+        return () => {
+            socket.off("joined-room" ,handleRoomJoined )
+        }   
     }, [socket])
 
     return ( 
