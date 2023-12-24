@@ -4,8 +4,6 @@ import Homepage from './Pages/Homepage'
 import CreateMeetingPage from './Pages/CreateMeeting'
 
 import { SocketProvider } from './Context/Socket'
-import { PeerProvider } from './Context/Peer'
-import React from 'react'
 import Room from './Pages/Room'
 
 
@@ -17,7 +15,6 @@ function App() {
   return (
     
     <SocketProvider>
-      <PeerProvider   >
 
         <Routes  >
           
@@ -25,7 +22,6 @@ function App() {
             <Route  path='/meeting/create' element={<CreateMeetingPage/>} />
             <Route  path='/meeting/:roomId' element={ <Room/> }/>
         </Routes>
-      </PeerProvider>
     </SocketProvider>
   )
 }

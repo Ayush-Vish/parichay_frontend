@@ -21,11 +21,7 @@ function CreateMeetingPage ( )  {
     
     const data = useSelector(state   => state.auth) as authInitailState ;
     function handleSubmit ( )  {
-
-
-
-
-        socket.emit("join-room" , {roomId: randomId , emailId : authData.data.email })
+        socket.emit("room:join" , {roomId: randomId , emailId : authData.data.email })
     }
     const  handleRoomJoined = useCallback(
         ({roomId}) => {
@@ -35,11 +31,11 @@ function CreateMeetingPage ( )  {
         [navigate]
     )
     useEffect(()=>{
-        socket.on("joined-room" ,handleRoomJoined )
+        socket.on("room:join" ,handleRoomJoined )
         return () => {
-            socket.off("joined-room" ,handleRoomJoined )
+            socket.off("room:join" ,handleRoomJoined )
         }   
-    }, [socket])
+    }, [handleRoomJoined, socket])
 
     return ( 
         <main className="max-w-[60rem] mt-1 gap-7 flex flex-col m-auto   sm:items-center     ">
